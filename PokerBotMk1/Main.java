@@ -56,7 +56,7 @@ public class Main {
             case "3" -> cardOneValue = 1.5;
             case "2" -> cardOneValue = 1;
             default -> {
-                System.out.println("I fucked up in switch #1. My bad. uhh check main class, either fucky wucky in transferCards or runCalculationsStartingHand.\nThat's all for now boss, cya.");
+                System.out.println("I messed up in switch #1. My bad. uhh check main class, either the issue's in transferCards or runCalculationsStartingHand.\nThat's all for now boss, cya.");
                 System.exit(0);
             }
         }
@@ -75,7 +75,7 @@ public class Main {
             case "3" -> cardTwoValue = 1.5;
             case "2" -> cardTwoValue = 1;
             default -> {
-                System.out.println("I fucked up in switch #2. My bad. uhh check main class, either fucky wucky in transferCards or runCalculationsStartingHand.\nThat's all for now boss, cya.");
+                System.out.println("I messed up in switch #2. My bad. uhh check main class, either the issue's in transferCards or runCalculationsStartingHand.\nThat's all for now boss, cya.");
                 System.exit(0);
             }
         }
@@ -129,7 +129,7 @@ public class Main {
             }
         }
         else {
-            System.out.println("Fuck this shit and go to bed.\n\n\n\npussy");
+            System.out.println("Stop workin on this and go to bed.\n\n\n\nYou smell");
             System.exit(69);
         }
         String suitInput = "blank";
@@ -152,7 +152,7 @@ public class Main {
         }
         if (!wasRemoved) {
             while (!wasRemoved) {
-                System.out.println("The card you just entered has already been factored into this calculator run.\n\nGreat. We gotta do this all over again. This time, don't fuck it up.");
+                System.out.println("The card you just entered has already been factored into this calculator run.\n\nGreat. We gotta do this all over again. This time, don't mess it up.");
                 cardLet = "dis is a card";
                 cardNum = 0;
                 try {
@@ -189,7 +189,7 @@ public class Main {
                     }
                 }
                 else {
-                    System.out.println("Fuck this shit and go to bed.\n\n\n\npussy");
+                    System.out.println("Stop working on this and go to bed.\n\n\n\nNighty-night");
                     System.exit(69);
                 }
                 suitInput = "blank";
