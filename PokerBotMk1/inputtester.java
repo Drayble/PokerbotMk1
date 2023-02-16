@@ -15,7 +15,7 @@ public class inputtester {
             inputString = scan.next();
             System.out.println("String was recieved");
         }
-        System.out.println("Fuck this\n" + inputInt + " " + inputString);
+        System.out.println("This sucks\n" + inputInt + " " + inputString);
         String banana = "BANANANA";
         System.out.println(banana);
         banana.toLowerCase();
