@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class Main {
     static ArrayList<Card> currentDeck = new ArrayList<>();
     static ArrayList<Card> currentHand = new ArrayList<>();
+    static ArrayList<Card> currentRiver = new ArrayList<>();
 
     public static void main(String[] args) {
         for (int x = 0; x < 4; x++) {
@@ -26,6 +27,7 @@ public class Main {
         }
         System.out.println("Please enter the 2 cards in your hand in this format: card # (space) suit.\nExample: \"3 spades\"");
         runCalculationsStartingHand(2);
+        System.exit(52);
         System.out.println("Enter the first 3 cards of the flop.");
         runCalculations(3);
         System.out.println("Enter the 4th card.");
@@ -34,64 +36,79 @@ public class Main {
         runCalculations(1);
     }
 
+    public static String printCardList(ArrayList<Card> inputList) {
+        String output = "(";
+        for (int i = 0; i < inputList.size() - 1; i++) {
+            output += inputList.get(i) + ", ";
+        }
+        output += inputList.get(inputList.size() - 1) + ")";
+        return output;
+    }
+
     public static void runCalculationsStartingHand(int newEntries) {
         for (int i = 1; i <= newEntries; i++) {
-            Card cardTransferred = transferCards();
+            Card cardTransferred = transferCards(0);
             System.out.println("Received card #" + i + " (" + cardTransferred + ")");
         }
-        double cardOneValue = 0;
-        double cardTwoValue = 0;
-        switch (currentHand.get(0).getCardNumLetValue()) {
-            case "Ace" -> cardOneValue = 10;
-            case "King" -> cardOneValue = 8;
-            case "Queen" -> cardOneValue = 7;
-            case "Jack" -> cardOneValue = 6;
-            case "10" -> cardOneValue = 5;
-            case "9" -> cardOneValue = 4.5;
-            case "8" -> cardOneValue = 4;
-            case "7" -> cardOneValue = 3.5;
-            case "6" -> cardOneValue = 3;
-            case "5" -> cardOneValue = 2.5;
-            case "4" -> cardOneValue = 2;
-            case "3" -> cardOneValue = 1.5;
-            case "2" -> cardOneValue = 1;
-            default -> {
-                System.out.println("I messed up in switch #1. My bad. uhh check main class, either the issue's in transferCards or runCalculationsStartingHand.\nThat's all for now boss, cya.");
-                System.exit(0);
+        System.out.println("The starting hand of " + printCardList(currentHand) + ", gives a Chen value of " + calculateStartingHandByChenFormula());
+    }
+
+    public static double calculateStartingHandByChenFormula() {
+        double totalValue = 0.0;
+        if (currentHand.get(0).getNumericValue() == currentHand.get(1).getNumericValue()) {
+            totalValue = (currentHand.get(0).getChenValue() * 2);
+            if (totalValue < 5) {
+                totalValue = 5;
             }
         }
-        switch (currentHand.get(1).getCardNumLetValue()) {
-            case "Ace" -> cardTwoValue = 10;
-            case "King" -> cardTwoValue = 8;
-            case "Queen" -> cardTwoValue = 7;
-            case "Jack" -> cardTwoValue = 6;
-            case "10" -> cardTwoValue = 5;
-            case "9" -> cardTwoValue = 4.5;
-            case "8" -> cardTwoValue = 4;
-            case "7" -> cardTwoValue = 3.5;
-            case "6" -> cardTwoValue = 3;
-            case "5" -> cardTwoValue = 2.5;
-            case "4" -> cardTwoValue = 2;
-            case "3" -> cardTwoValue = 1.5;
-            case "2" -> cardTwoValue = 1;
-            default -> {
-                System.out.println("I messed up in switch #2. My bad. uhh check main class, either the issue's in transferCards or runCalculationsStartingHand.\nThat's all for now boss, cya.");
-                System.exit(0);
+        else {
+            totalValue += getHighestValCard(currentHand).getChenValue();
+            switch (getCardDifference(currentHand)) {
+                case 2 -> totalValue -= 1; //1 gap
+                case 3 -> totalValue -= 2; //2 gap
+                case 4 -> totalValue -= 4; //3 gap
+                case 5, 6, 7, 8, 9, 10, 11, 12 -> totalValue -= 5; //5 or more gap
+            }
+            if ((getHighestValCard(currentHand).getNumericValue() < 12) && (getCardDifference(currentHand) <= 2)) {
+                totalValue += 1;
+            }
+            if (currentHand.get(0).getSuit().equals(currentHand.get(1).getSuit())) {
+                totalValue += 2;
             }
         }
-        System.out.println(currentHand.get(0) + " value is equal to: " + cardOneValue);
-        System.out.println(currentHand.get(1) + " value is equal to: " + cardTwoValue);
-        
+        return totalValue;
+    }
+
+    public static int getCardDifference(ArrayList<Card> inputList) {
+        Card cardOne = inputList.get(0);
+        Card cardTwo = inputList.get(1);
+        return Math.abs(cardOne.getNumericValue() - cardTwo.getNumericValue());
+    }
+
+    public static Card getHighestValCard(ArrayList<Card> inputList) {
+        Card cardOne = inputList.get(0);
+        Card cardTwo = inputList.get(1);
+        if (cardOne.getChenValue() > cardTwo.getChenValue()) {
+            return cardOne;
+        }
+        else {
+            return cardTwo;
+        }
     }
 
     public static void runCalculations(int newEntries) {
         for (int i = 1; i <= newEntries; i++) {
-            Card cardTransferred = transferCards();
+            Card cardTransferred = transferCards(1);
             System.out.println("Received card #" + i + " (" + cardTransferred + ")");
         }
     }
 
-    private static Card transferCards() {
+
+    /* TODO:
+          destination = 0 --> player's hand
+          destination = 1 --> river
+     */
+    private static Card transferCards(int destination) {
         Scanner scan = new Scanner(System.in);
         String cardLet = "dis is a card";
         int cardNum = 0;
@@ -129,7 +146,7 @@ public class Main {
             }
         }
         else {
-            System.out.println("Stop workin on this and go to bed.\n\n\n\nYou smell");
+            System.out.println("Fuck this shit and go to bed.\n\n\n\npussy");
             System.exit(69);
         }
         String suitInput = "blank";
@@ -142,7 +159,12 @@ public class Main {
         }
         String newCardSuit = ((suitInput.substring(0, 1)).toUpperCase()) + suitInput.substring(1);
         Card cardToRemove = new Card(newCardNumVal, newCardSuit);
-        currentHand.add(cardToRemove);
+        if (destination == 0) {
+            currentHand.add(cardToRemove);
+        }
+        if (destination == 1) {
+            currentRiver.add(cardToRemove);
+        }
         boolean wasRemoved = false;
         for (int i = 0; i < currentDeck.size(); i++) {
             if (currentDeck.get(i).getSuit().equals(cardToRemove.getSuit()) && currentDeck.get(i).getNumericValue() == cardToRemove.getNumericValue()) {
@@ -152,7 +174,7 @@ public class Main {
         }
         if (!wasRemoved) {
             while (!wasRemoved) {
-                System.out.println("The card you just entered has already been factored into this calculator run.\n\nGreat. We gotta do this all over again. This time, don't mess it up.");
+                System.out.println("The card you just entered has already been factored into this calculator run.\n\nGreat. We gotta do this all over again. This time, don't fuck it up.");
                 cardLet = "dis is a card";
                 cardNum = 0;
                 try {
@@ -189,7 +211,7 @@ public class Main {
                     }
                 }
                 else {
-                    System.out.println("Stop working on this and go to bed.\n\n\n\nNighty-night");
+                    System.out.println("Fuck this shit and go to bed.\n\n\n\npussy");
                     System.exit(69);
                 }
                 suitInput = "blank";
@@ -202,7 +224,12 @@ public class Main {
                 }
                 newCardSuit = ((suitInput.substring(0, 1)).toUpperCase()) + suitInput.substring(1);
                 cardToRemove = new Card(newCardNumVal, newCardSuit);
-                currentHand.add(cardToRemove);
+                if (destination == 0) {
+                    currentHand.add(cardToRemove);
+                }
+                if (destination == 1) {
+                    currentRiver.add(cardToRemove);
+                }
                 wasRemoved = false;
                 for (int i = 0; i < currentDeck.size(); i++) {
                     if (currentDeck.get(i).getSuit().equals(cardToRemove.getSuit()) && currentDeck.get(i).getNumericValue() == cardToRemove.getNumericValue()) {
